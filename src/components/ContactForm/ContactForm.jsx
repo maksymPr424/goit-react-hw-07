@@ -1,11 +1,9 @@
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useEffect, useId } from "react";
+import { useId } from "react";
 import css from "./ContactForm.module.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addContact } from "../../redux/contactsOps";
-import { selectError, selectLoading } from "../../redux/selectors";
-import toast, { Toaster } from "react-hot-toast";
 
 const initValues = {
   name: "",
@@ -27,22 +25,6 @@ export default function ContactForm() {
   const nameId = useId();
   const phoneId = useId();
   const dispatch = useDispatch();
-  const isError = useSelector(selectError);
-  const isLoading = useSelector(selectLoading);
-
-  useEffect(() => {
-    if (isLoading) {
-      const notifyPromise = new Promise((resolve, reject) => {
-        !isError ? resolve() : reject();
-      });
-
-      toast.promise(notifyPromise, {
-        loading: "Loading",
-        success: () => `Successfully action!`,
-        error: () => `Ooops, please reload page!`,
-      });
-    }
-  }, [isLoading, isError]);
 
   const submitForm = (values, actions) => {
     dispatch(addContact(values));
@@ -94,7 +76,6 @@ export default function ContactForm() {
           </button>
         </Form>
       </Formik>
-      <Toaster />
     </>
   );
 }
